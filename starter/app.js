@@ -198,6 +198,13 @@ let UIController = (function() {
         return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
     };
 
+    let nodeListForEach = function(list, callback) {
+
+        for (let i = 0; i < list.length; i++) {
+            callback(list[i], i);
+        }
+    };
+
     return {
         getInput: function() {
             return {
@@ -282,12 +289,7 @@ let UIController = (function() {
 
             let fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
-            let nodeListForEach = function(list, callback) {
-
-                for (let i = 0; i < list.length; i++) {
-                    callback(list[i], i);
-                }
-            };
+            
 
             nodeListForEach(fields, function(current, index) {
                 
@@ -297,6 +299,22 @@ let UIController = (function() {
                     current.textContent = '---'
                 }          
             });
+        },
+
+        changeInputColor: function() {
+            let fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' +
+                DOMstrings.inputDescription + ',' +
+                DOMstrings.inputValue
+            );
+
+            nodeListForEach(fields, function(cur) {
+                cur.classList.toggle('red-focus');
+            });
+
+            let button = document.querySelector(DOMstrings.inputButton);
+
+            buttonChangeColor = button.classList.toggle('red');
         },
 
         getDOMstrings: function() {
@@ -320,6 +338,7 @@ let controller = (function(budgetCtrl, UICtrl) {
         });
 
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changeInputColor); 
 
     };
 
